@@ -1,4 +1,10 @@
 terraform {
+  backend s3 {
+    bucket = "mancevice.dev"
+    key    = "terraform/alexander.tfstate"
+    region = "us-east-1"
+  }
+
   required_version = ">= 0.12.0"
 }
 
