@@ -2,4 +2,10 @@ language: ruby
 rvm:
 - "2.6"
 script:
-- make
+- make plan
+deploy:
+- provider: script
+  script: make apply
+  on:
+    repo: amancevice/mancevice.dev
+    tags: true
