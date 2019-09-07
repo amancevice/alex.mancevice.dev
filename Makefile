@@ -3,7 +3,7 @@ stages := build plan
 build  := $(shell git describe --tags --always)
 shells := $(foreach stage,$(stages),shell@$(stage))
 
-terraform_version := 0.12.6
+terraform_version := 0.12.8
 
 .PHONY: all clean up alexander.sha256sum
 
