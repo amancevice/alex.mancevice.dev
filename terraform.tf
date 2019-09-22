@@ -48,23 +48,6 @@ data aws_acm_certificate cert {
   statuses = ["ISSUED"]
 }
 
-/*
-resource aws_acm_certificate cert {
-  domain_name       = local.domain
-  tags              = local.tags
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource aws_acm_certificate_validation cert {
-  certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [data.aws_acm_certificate.cert.arn]
-}
-*/
-
 resource aws_cloudfront_distribution website {
   aliases             = ["alex.${local.domain}", "alexander.${local.domain}"]
   default_root_object = "index.html"
@@ -122,69 +105,6 @@ resource aws_cloudfront_distribution website {
 resource aws_cloudfront_origin_access_identity website {
   comment = "access-identity-alexander.${local.domain}.s3.amazonaws.com"
 }
-
-/*
-resource aws_route53_record a {
-  name    = local.domain
-  type    = "A"
-  zone_id = aws_route53_zone.website.id
-
-  alias {
-    evaluate_target_health = false
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource aws_route53_record aaaa {
-  name    = local.domain
-  type    = "AAAA"
-  zone_id = aws_route53_zone.website.id
-
-  alias {
-    evaluate_target_health = false
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource aws_route53_record cert {
-  name    = aws_acm_certificate.cert.domain_validation_options.0.resource_record_name
-  records = [aws_acm_certificate.cert.domain_validation_options.0.resource_record_value]
-  ttl     = 300
-  type    = aws_acm_certificate.cert.domain_validation_options.0.resource_record_type
-  zone_id = aws_route53_zone.website.id
-}
-
-resource aws_route53_record alexander_a {
-  name    = "alexander.${local.domain}"
-  type    = "A"
-  zone_id = aws_route53_zone.website.id
-
-  alias {
-    evaluate_target_health = false
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource aws_route53_record alexander_aaaa {
-  name    = "alexander.${local.domain}"
-  type    = "AAAA"
-  zone_id = aws_route53_zone.website.id
-
-  alias {
-    evaluate_target_health = false
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource aws_route53_zone website {
-  comment = "HostedZone created by Route53 Registrar"
-  name    = local.domain
-}
-*/
 
 resource aws_s3_bucket website {
   acl           = "private"
