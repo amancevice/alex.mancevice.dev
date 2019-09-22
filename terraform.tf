@@ -62,7 +62,7 @@ resource aws_acm_certificate_validation cert {
 */
 
 resource aws_cloudfront_distribution website {
-  aliases             = [var.domain_name, "alexander.${var.domain_name}"]
+  aliases             = ["alex.${var.domain_name}", "alexander.${var.domain_name}"]
   default_root_object = "index.html"
   enabled             = true
   is_ipv6_enabled     = true
