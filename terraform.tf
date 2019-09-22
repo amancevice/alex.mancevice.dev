@@ -18,11 +18,15 @@ provider null {
 }
 
 locals {
+  domain  = "mancevice.dev"
+  release = "2019.9.22"
+  repo    = "https://github.com/amancevice/alex.mancevice.dev"
+
   tags = {
-    App     = "mancevice.dev"
-    Name    = var.domain_name
-    Release = var.release
-    Repo    = var.repo
+    App     = "alexander.${local.domain}"
+    Name    = local.domain
+    Release = local.release
+    Repo    = local.repo
   }
 }
 
@@ -30,7 +34,7 @@ data aws_iam_policy_document website {
   statement {
     sid       = "AllowCloudFront"
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::alexander.${var.domain_name}/*"]
+    resources = ["arn:aws:s3:::alexander.${local.domain}/*"]
 
     principals {
       type        = "AWS"
@@ -40,13 +44,13 @@ data aws_iam_policy_document website {
 }
 
 data aws_acm_certificate cert {
-  domain   = var.domain_name
+  domain   = local.domain
   statuses = ["ISSUED"]
 }
 
 /*
 resource aws_acm_certificate cert {
-  domain_name       = var.domain_name
+  domain_name       = local.domain
   tags              = local.tags
   validation_method = "DNS"
 
@@ -62,7 +66,7 @@ resource aws_acm_certificate_validation cert {
 */
 
 resource aws_cloudfront_distribution website {
-  aliases             = ["alex.${var.domain_name}", "alexander.${var.domain_name}"]
+  aliases             = ["alex.${local.domain}", "alexander.${local.domain}"]
   default_root_object = "index.html"
   enabled             = true
   is_ipv6_enabled     = true
@@ -116,12 +120,12 @@ resource aws_cloudfront_distribution website {
 }
 
 resource aws_cloudfront_origin_access_identity website {
-  comment = "access-identity-alexander.${var.domain_name}.s3.amazonaws.com"
+  comment = "access-identity-alexander.${local.domain}.s3.amazonaws.com"
 }
 
 /*
 resource aws_route53_record a {
-  name    = var.domain_name
+  name    = local.domain
   type    = "A"
   zone_id = aws_route53_zone.website.id
 
@@ -133,7 +137,7 @@ resource aws_route53_record a {
 }
 
 resource aws_route53_record aaaa {
-  name    = var.domain_name
+  name    = local.domain
   type    = "AAAA"
   zone_id = aws_route53_zone.website.id
 
@@ -153,7 +157,7 @@ resource aws_route53_record cert {
 }
 
 resource aws_route53_record alexander_a {
-  name    = "alexander.${var.domain_name}"
+  name    = "alexander.${local.domain}"
   type    = "A"
   zone_id = aws_route53_zone.website.id
 
@@ -165,7 +169,7 @@ resource aws_route53_record alexander_a {
 }
 
 resource aws_route53_record alexander_aaaa {
-  name    = "alexander.${var.domain_name}"
+  name    = "alexander.${local.domain}"
   type    = "AAAA"
   zone_id = aws_route53_zone.website.id
 
@@ -178,13 +182,13 @@ resource aws_route53_record alexander_aaaa {
 
 resource aws_route53_zone website {
   comment = "HostedZone created by Route53 Registrar"
-  name    = var.domain_name
+  name    = local.domain
 }
 */
 
 resource aws_s3_bucket website {
   acl           = "private"
-  bucket        = "alexander.${var.domain_name}"
+  bucket        = "alexander.${local.domain}"
   force_destroy = false
   policy        = data.aws_iam_policy_document.website.json
   tags          = local.tags
@@ -221,20 +225,6 @@ resource null_resource invalidation {
   provisioner "local-exec" {
     command = "aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.website.id} --paths '/*'"
   }
-}
-
-variable domain_name {
-  description = "Website domain name."
-  default     = "mancevice.dev"
-}
-
-variable release {
-  description = "Release tag."
-}
-
-variable repo {
-  description = "Project repository."
-  default     = "https://github.com/somerville-cambridge-tenants-union/mancevice.dev"
 }
 
 output bucket_name {
