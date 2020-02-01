@@ -1,51 +1,51 @@
-name   := mancevice.dev
-stages := build plan
-build  := $(shell git describe --tags --always)
-shells := $(foreach stage,$(stages),shell@$(stage))
+STAGES    := build plan
+TERRAFORM := latest
+CLEANS    := $(foreach STAGE,$(STAGES),clean@$(STAGE))
+IMAGES    := $(foreach STAGE,$(STAGES),image@$(STAGE))
+SHELLS    := $(foreach STAGE,$(STAGES),shell@$(STAGE))
+BUILD     := $(shell git describe --tags --always)
+TIMESTAMP := $(shell date +%s)
 
-terraform_version := 0.12.9
+.PHONY: default clean clobber up alexander.sha256sum
 
-.PHONY: all clean up alexander.sha256sum
-
-all: alexander.sha256sum
+default: alexander.sha256sum
 
 .docker:
 	mkdir -p $@
 
-.docker/$(build)@plan: .docker/$(build)@build
-.docker/$(build)@%: | .docker
+.docker/$(BUILD)-plan: .docker/$(BUILD)-build
+.docker/$(BUILD)-%:  | .docker
 	docker build \
 	--build-arg AWS_ACCESS_KEY_ID \
 	--build-arg AWS_DEFAULT_REGION \
 	--build-arg AWS_SECRET_ACCESS_KEY \
-	--build-arg TERRAFORM_VERSION=$(terraform_version) \
-	--build-arg TF_VAR_release=$(build) \
-	--iidfile $@ \
-	--tag $(name):$(build)-$* \
-	--target $* .
+	--build-arg TERRAFORM=$(TERRAFORM) \
+	--build-arg TF_VAR_release=$(BUILD) \
+	--iidfile $@@$(TIMESTAMP) \
+	--tag mancevice.dev:$(BUILD)-$* \
+	--target $* \
+	.
+	cp $@@$(TIMESTAMP) $@
 
-apply: .docker/$(build)@plan
-	docker run --rm \
-	--env AWS_ACCESS_KEY_ID \
-	--env AWS_DEFAULT_REGION \
-	--env AWS_SECRET_ACCESS_KEY \
-	$(shell cat $<)
+apply: .docker/$(build)@plan .env
+	docker run --rm --env-file .env $(shell cat $<)
 
 clean:
-	-docker image rm -f $(shell awk {print} .docker/*)
-	-rm -rf .docker alexander.sha256sum
+	-find .docker -name '' -not -name '*@*' | xargs rm
+	-rm -rf alexander.sha256sum
+
+clobber:
+	-awk {print} .docker/* 2> /dev/null | xargs docker image rm --force
+	-rm -rf .docker
 
 up:
 	open http://localhost:8000/
-	ruby -r un -e httpd alexander -p 8000
+	ruby -run -e httpd alexander -p 8000
 
-alexander.sha256sum:
+alexander.sha256sum: alexander
 	sha256sum alexander/* | sha256sum > alexander.sha256sum
 
-$(stages): %: .docker/$(build)@%
+$(IMAGES): image@%: .docker/$(BUILD)-%
 
-$(shells): shell@%: .docker/$(build)@%
-	docker run --rm -it \
-	--entrypoint /bin/sh \
-	--env-file .env \
-	$(shell cat $<)
+$(SHELLS): shell@%: .docker/$(BUILD)-%
+	docker run --rm -it --entrypoint sh --env-file .env $(shell cat $<)

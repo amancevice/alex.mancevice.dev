@@ -1,11 +1,11 @@
-ARG TERRAFORM_VERSION=latest
+ARG TERRAFORM=latest
 
-FROM hashicorp/terraform:${TERRAFORM_VERSION} AS build
+FROM hashicorp/terraform:${TERRAFORM} AS build
 WORKDIR /var/task/
 COPY . .
 RUN sha256sum alexander/* | sha256sum > alexander.sha256sum
 
-FROM hashicorp/terraform:${TERRAFORM_VERSION} AS plan
+FROM hashicorp/terraform:${TERRAFORM} AS plan
 WORKDIR /var/task/
 COPY --from=build /var/task/ .
 ARG AWS_ACCESS_KEY_ID
