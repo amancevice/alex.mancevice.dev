@@ -6,7 +6,10 @@ SHELLS    := $(foreach STAGE,$(STAGES),shell@$(STAGE))
 BUILD     := $(shell git describe --tags --always)
 TIMESTAMP := $(shell date +%s)
 
-.PHONY: default clean clobber up
+CLOUDFRONT_DISTRIBUTION_ID := $$(terraform output cloudfront_distribution_id)
+S3_BUCKET                  := $$(terraform output bucket_name)
+
+.PHONY: default clean clobber sync up
 
 default: alexander.sha256sum
 
@@ -37,6 +40,10 @@ clean:
 clobber:
 	-awk {print} .docker/* 2> /dev/null | xargs docker image rm --force
 	-rm -rf .docker
+
+sync:
+	aws s3 sync alexander s3://$(S3_BUCKET)/
+	aws cloudfront create-invalidation --distribution-id $(CLOUDFRONT_DISTRIBUTION_ID) --paths '/*'
 
 up:
 	open http://localhost:8000/
