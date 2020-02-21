@@ -9,7 +9,7 @@ TIMESTAMP := $(shell date +%s)
 CLOUDFRONT_DISTRIBUTION_ID := $$(terraform output cloudfront_distribution_id)
 S3_BUCKET                  := $$(terraform output bucket_name)
 
-.PHONY: default clean clobber sync up
+.PHONY: default apply clean clobber plan sync up $(CLEANS) $(IMAGES) $(SHELLS)
 
 default: alexander.sha256sum
 
@@ -30,7 +30,7 @@ default: alexander.sha256sum
 	.
 	cp $@@$(TIMESTAMP) $@
 
-apply: .docker/$(build)@plan .env
+apply: .docker/$(BUILD)-plan .env
 	docker run --rm --env-file .env $(shell cat $<)
 
 clean:
@@ -40,6 +40,8 @@ clean:
 clobber:
 	-awk {print} .docker/* 2> /dev/null | xargs docker image rm --force
 	-rm -rf .docker
+
+plan: .docker/$(BUILD)-plan
 
 sync:
 	aws s3 sync alexander s3://$(S3_BUCKET)/
