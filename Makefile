@@ -6,7 +6,7 @@ SHELLS    := $(foreach STAGE,$(STAGES),shell@$(STAGE))
 BUILD     := $(shell git describe --tags --always)
 TIMESTAMP := $(shell date +%s)
 
-.PHONY: default clean clobber up alexander.sha256sum
+.PHONY: default clean clobber up
 
 default: alexander.sha256sum
 
