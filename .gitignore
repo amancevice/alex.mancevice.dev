@@ -11,4 +11,4 @@
 **/.docker/
 **/.terraform/
 *.env
-*.sha256sum
+*.zip
