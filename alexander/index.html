@@ -47,8 +47,16 @@
         </div>
         <div class="nine columns">
           <hr/>
-          <div>Senior software developer with 12 years of experience who enjoys working with emerging technology and design patterns with an emphasis on serverless, microservices, and infrastructure-as-code paradigms.</div>
-          <br/>
+          <div>
+            <p>
+              Senior software developer with 12 years of experience who enjoys working with
+              emerging technology and design patterns; particularly open source tools, serverless
+              architecture, and microservice-oriented infrastructure.
+            </p>
+            <p>
+              Contributor to many open source projects, including Homebrew.
+            </p>
+          </div>
           <div>
             <div>
               <a target="_blank" href="https://goo.gl/maps/deJP4oNgqHN5fWmd9">
@@ -102,7 +110,7 @@
         <div class="nine columns">
           <hr/>
           <div>
-            <div><strong>Languages</strong> &mdash; Ruby, Python, JavaScript, Shell, SQL, Terraform (HCL)</div>
+            <div><strong>Languages</strong> &mdash; Ruby, Python, JavaScript, Shell, SQL, Terraform</div>
             <div><strong>Concepts</strong> &mdash; Serverless, Infrastructure-As-Code, Microservices, NoSQL</div>
             <div><strong>Platforms</strong> &mdash; Linux, macOS, Docker, AWS, Google Cloud, Heroku</div>
           </div>
@@ -122,16 +130,22 @@
             <h4>CargoMetrics</h4>
             <h5>APRIL 2013 — PRESENT | BOSTON, MA</h5>
             <p>
-              CargoMetrics is a unique endeavor that mines shipping data for information about
-              the global supply line and overseas shipping, an industry that still largely
-              relies on pre-digital technology.
+              Designed core components of CargoMetrics’ commodity trading system, including data
+              models, command-line interfaces, dashboards, and cloud infrastructure.
             </p>
             <p>
-              The engineering team at CargoMetrics is dynamic and adaptive; my role has evolved
-              and changed over time as the company reoriented. My primary focus has been creating
-              service-oriented infrastructure, supporting a microservices framework, and migrating
-              legacy applications into an events-based system. Using novel approaches to software
-              design has been essential to my professional development.
+              Helped the company transition from monolithic applications running on traditional
+              infrastructure to microservices running in serverless or container-based
+              environments.
+            </p>
+            <p>
+              Migrated numerous legacy schedule-based systems to event-driven and resilient cloud
+              processes, hardening reliability of cloud infrastructure and reducing the number of
+              alarm states.
+            </p>
+            <p>
+              Continuously iterated and improved upon design patterns that were adopted by the
+              engineering team for infrastructure setup, CI/CD pipelines, and code design.
             </p>
           </div>
 
@@ -142,14 +156,18 @@
             <h4>DataXu</h4>
             <h5>NOVEMBER 2010 — MARCH 2013 | BOSTON, MA</h5>
             <p>
-              DataXu is an industry leader in the Demand-Side & Data Management Platforms for
-              cross-channel targeted online advertising.
+              First hire for DataXu’s original Solutions Engineering team and helped craft the
+              department’s role in the company.
             </p>
             <p>
-              As one of the original two-person solutions engineering team, I provided custom,
-              rapid solutions and proof-of-concepts for DataXu’s programmatic ad-buying platform.
-              I developed tools for monitoring performance and for the initial proposal to integrate
-              real-time video into the product.
+              Developed toolkit for the growing Solutions Engineering team to use to maneuver
+              through DataXu’s software stack, including the demo product for the flagship Ruby
+              on Rails UI.
+            </p>
+            <p>
+              Helped craft custom, rapid solutions and proof-of-concepts for DataXu’s programmatic
+              ad-buying platform, including the initial proposal to integrate real-time video
+              into the product.
             </p>
           </div>
 
@@ -160,13 +178,12 @@
             <h4>Vamosa</h4>
             <h5>NOVEMBER 2008 — NOVEMBER 2010 | BOSTON, MA</h5>
             <p>
-              Vamosa was a startup focusing on content migration consulting and delivery; providing custom
-              solutions for clients to migrate content into new management systems.
+              Designed, implemented, and executed the seamless transition of clients’ legacy web
+              content into new management systems using custom and reusable code components.
             </p>
             <p>
-              I consulted around the US and Europe for companies like Skype, Novartis, and Oracle. As
-              solutions architect, I designed, implemented, and executed the seamless transition of
-              clients’ content into new management systems.
+              Worked on site for clients in both a member of a small team and as a solo project
+              executor to achieve success.
             </p>
           </div>
 
@@ -188,10 +205,10 @@
         </div>
       </div>
 
-      <!-- Personal Projects -->
+      <!-- Portfolio -->
       <div class="row">
         <div class="three columns">
-          <h3>Personal Projects</h3>
+          <h3>Portfolio</h3>
         </div>
         <div class="nine columns">
           <hr/>
@@ -222,13 +239,10 @@
             <p>
               Serverless app that mirrors posts from
               <a target="_blank" href="https://reddit.com/r/brutalism">/r/brutalism</a>
-              to Twitter or Slack.
-            </p>
-            <p>
-              The project is hosted on AWS using a completely serverless infrastructure.
-              Alongside the core application is a static website hosted on S3 and
-              distributed via CloudFront; support email address configured with SES,
-              and application health monitoring via CloudWatch.
+              to Twitter or Slack. The project is hosted on AWS using a completely serverless
+              infrastructure. Alongside the core application is a static website hosted on S3 and
+              distributed via CloudFront; support email address configured with SES, and
+              application health monitoring via CloudWatch.
             </p>
             <p>
               <a target="_blank" href="https://twitter.com/brutalismbot">
@@ -254,12 +268,11 @@
               </span>
             </h5>
             <p>
-              Plugin for Ruby's popular Rake DSL for writing declarative build workflows using Docker.
-            </p>
-            <p>
-              Users can install the gem from RubyGems, define their build, and use the rake CLI to
-              build exportable artifacts inside the Docker build container or run arbitrary commands
-              inside ephemeral containers at different stages of the build.
+              DSL for writing declarative Docker-based workflows using Rake, Ruby’s popular
+              make-like utility for working with build tasks. Users can install the gem from
+              RubyGems, define their build, and use the rake CLI to build exportable artifacts
+              inside the Docker build container or run arbitrary commands inside ephemeral
+              containers at different stages of the build.
             </p>
             <p>
               <a target="_blank" href="https://github.com/amancevice/rumrunner">
@@ -282,17 +295,16 @@
                   GitHub
                 </a>
                 |
-                <a target="_blank" href="">
+                <a target="_blank" href="https://registry.terraform.io/modules/amancevice/serverless-pypi/aws">
                   Terraform Registry
                 </a>
               </span>
             </h5>
             <p>
-              Terraform module for deploying a custom PyPI index on AWS backed by S3.
-            </p>
-            <p>
-              Python packages are stored on S3 and served over HTTP using API Gateway and Lambda proxy function.
-              An additional module is available to attach Cognito-based authentication to your index.
+              Terraform module for deploying a custom PyPI index on AWS backed by S3. Users can
+              store Python packages on S3 and retrieve them with pip over HTTP using API Gateway
+              and a Lambda proxy function. An additional module is available to attach
+              Cognito-based authentication to your index.
             </p>
             <p>
               <a target="_blank" href="https://github.com/amancevice/terraform-aws-serverless-pypi">
@@ -321,12 +333,11 @@
             <p>
               Middleware for
               <a target="_blank" href="http://expressjs.com/">Express</a>
-              to deploy an asynchronous REST API for developing Slack Apps.
-            </p>
-            <p>
-              Requests from Slack are received, processed, and enhanced with routing
-              instructions to be published to the notification/queuing service of your
-              choice.
+              to deploy an asynchronous REST API for developing Slack Apps. Requests from Slack
+              are received, processed, and enhanced with routing instructions to be published to
+              the notification/queuing service of your choice. Because SlackEnd is not opinionated
+              about how messages are handled, extending Slack apps is easy and requires no code
+              redeployment.
             </p>
             <p>
               <a target="_blank" href="https://github.com/amancevice/slackend">
@@ -356,9 +367,9 @@
               </span>
             </h5>
             <p>
-              The most-popular public Docker image for the Apache data visualization tool, Superset.
-              In addition to tagged updates, weekly automated builds allow users to test features on
-              the master branch of the source repository.
+              The most-popular public Docker image for the Apache data visualization tool,
+              Superset. In addition to tagged updates, weekly automated builds allow users to test
+              features on the master branch of the source repository.
             </p>
             <p>
               <a target="_blank" href="https://github.com/amancevice/docker-superset">
