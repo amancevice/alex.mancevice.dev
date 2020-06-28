@@ -7,7 +7,7 @@ terraform.zip: terraform.tf | .terraform
 .terraform:
 	terraform init
 
-.PHONY: apply clean clobber plan sync up
+.PHONY: apply clean clobber invalidation plan sync up
 
 apply: terraform.zip
 	terraform apply $<
@@ -17,6 +17,11 @@ clean:
 
 clobber: clean
 	rm -rf .terraform
+
+invalidation:
+	aws cloudfront create-invalidation \
+	--distribution-id $$(terraform output cloudfront_distribution_id) \
+	--paths '/*'
 
 plan: terraform.zip
 
