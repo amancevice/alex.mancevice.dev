@@ -1,13 +1,10 @@
-.env:
-	cp $@.example $@
-
 .terraform:
 	terraform init
 
-.terraform/terraform.zip: terraform.tf | .terraform
+.terraform/terraform.zip: *.tf alexander/* | .terraform
 	terraform plan -out $@
 
-.PHONY: apply clean clobber invalidation plan sync up
+.PHONY: plan apply clean clobber invalidation sync up
 
 plan: .terraform/terraform.zip
 

@@ -8,7 +8,4 @@
 # .tfvars files
 *.tfvars
 
-**/.docker/
-**/.terraform/
 *.env
-*.zip

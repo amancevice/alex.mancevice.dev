@@ -1,3 +1,19 @@
+variable ROLE_ARN {
+  description = "IAM role ARN"
+}
+
+locals {
+  domain   = "mancevice.dev"
+  repo     = "https://github.com/amancevice/alex.mancevice.dev"
+  role_arn = var.ROLE_ARN
+
+  tags = {
+    App  = "alexander.${local.domain}"
+    Name = local.domain
+    Repo = local.repo
+  }
+}
+
 terraform {
   backend s3 {
     bucket = "mancevice.dev"
@@ -11,16 +27,9 @@ terraform {
 provider aws {
   region  = "us-east-1"
   version = "~> 2.7"
-}
 
-locals {
-  domain = "mancevice.dev"
-  repo   = "https://github.com/amancevice/alex.mancevice.dev"
-
-  tags = {
-    App  = "alexander.${local.domain}"
-    Name = local.domain
-    Repo = local.repo
+  assume_role {
+    role_arn = local.role_arn
   }
 }
 
