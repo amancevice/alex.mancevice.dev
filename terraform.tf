@@ -1,16 +1,10 @@
-variable ROLE_ARN {
-  description = "IAM role ARN"
-}
+variable ROLE_ARN { default = null }
 
 locals {
-  domain   = "mancevice.dev"
-  repo     = "https://github.com/amancevice/alex.mancevice.dev"
-  role_arn = var.ROLE_ARN
-
   tags = {
-    App  = "alexander.${local.domain}"
-    Name = local.domain
-    Repo = local.repo
+    App  = "alexander.mancevice.dev"
+    Name = "mancevice.dev"
+    Repo = "https://github.com/amancevice/alex.mancevice.dev"
   }
 }
 
@@ -29,7 +23,7 @@ provider aws {
   version = "~> 2.7"
 
   assume_role {
-    role_arn = local.role_arn
+    role_arn = var.ROLE_ARN
   }
 }
 
@@ -37,7 +31,7 @@ data aws_iam_policy_document website {
   statement {
     sid       = "AllowCloudFront"
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::alexander.${local.domain}/*"]
+    resources = ["arn:aws:s3:::alexander.mancevice.dev/*"]
 
     principals {
       type        = "AWS"
@@ -47,16 +41,20 @@ data aws_iam_policy_document website {
 }
 
 data aws_acm_certificate cert {
-  domain   = local.domain
+  domain   = "mancevice.dev"
   statuses = ["ISSUED"]
 }
 
 resource aws_cloudfront_distribution website {
-  aliases             = ["alex.${local.domain}", "alexander.${local.domain}"]
   default_root_object = "index.html"
   enabled             = true
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
+
+  aliases = [
+    "alex.mancevice.dev",
+    "alexander.mancevice.dev",
+  ]
 
   custom_error_response {
     error_caching_min_ttl = 300
@@ -106,12 +104,12 @@ resource aws_cloudfront_distribution website {
 }
 
 resource aws_cloudfront_origin_access_identity website {
-  comment = "access-identity-alexander.${local.domain}.s3.amazonaws.com"
+  comment = "access-identity-alexander.mancevice.dev.s3.amazonaws.com"
 }
 
 resource aws_s3_bucket website {
   acl           = "private"
-  bucket        = "alexander.${local.domain}"
+  bucket        = "alexander.mancevice.dev"
   force_destroy = false
   policy        = data.aws_iam_policy_document.website.json
   tags          = local.tags
