@@ -1,5 +1,3 @@
-variable ROLE_ARN { default = null }
-
 locals {
   tags = {
     App  = "alexander.mancevice.dev"
@@ -20,25 +18,10 @@ terraform {
 
 provider aws {
   region  = "us-east-1"
-  version = "~> 2.7"
-
-  assume_role {
-    role_arn = var.ROLE_ARN
-  }
+  version = "~> 2.70"
 }
 
-data aws_iam_policy_document website {
-  statement {
-    sid       = "AllowCloudFront"
-    actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::alexander.mancevice.dev/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.website.iam_arn]
-    }
-  }
-}
+# CLOUDFRONT
 
 data aws_acm_certificate cert {
   domain   = "mancevice.dev"
@@ -107,6 +90,21 @@ resource aws_cloudfront_origin_access_identity website {
   comment = "access-identity-alexander.mancevice.dev.s3.amazonaws.com"
 }
 
+# S3 BUCKET
+
+data aws_iam_policy_document website {
+  statement {
+    sid       = "AllowCloudFront"
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::alexander.mancevice.dev/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.website.iam_arn]
+    }
+  }
+}
+
 resource aws_s3_bucket website {
   acl           = "private"
   bucket        = "alexander.mancevice.dev"
@@ -127,6 +125,8 @@ resource aws_s3_bucket_public_access_block website {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+# OUTPUTS
 
 output bucket_name {
   description = "S3 website bucket name."
