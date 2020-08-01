@@ -23,7 +23,7 @@ directory(".terraform") { sh "terraform init" }
 end
 
 desc "Invalidate CloudFront cache"
-task :invalidation => :init do
+task :cachebust => :init do
   sh <<~EOS
     aws cloudfront create-invalidation \
     --distribution-id $(terraform output cloudfront_distribution_id) \

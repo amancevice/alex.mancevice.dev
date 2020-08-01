@@ -1,4 +1,4 @@
-.PHONY: plan apply clean clobber invalidation sync up
+.PHONY: plan apply clean clobber cachebust sync up
 
 plan: .terraform/terraform.zip
 
@@ -11,7 +11,7 @@ clean:
 clobber: clean
 	rm -rf .terraform
 
-invalidation:
+cachebust:
 	aws cloudfront create-invalidation \
 	--distribution-id $$(terraform output cloudfront_distribution_id) \
 	--paths '/*'
