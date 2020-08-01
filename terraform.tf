@@ -1,11 +1,3 @@
-locals {
-  tags = {
-    App  = "alexander.mancevice.dev"
-    Name = "mancevice.dev"
-    Repo = "https://github.com/amancevice/alex.mancevice.dev"
-  }
-}
-
 terraform {
   backend s3 {
     bucket = "mancevice.dev"
@@ -19,6 +11,14 @@ terraform {
 provider aws {
   region  = "us-east-1"
   version = "~> 2.70"
+}
+
+locals {
+  tags = {
+    App  = "alexander.mancevice.dev"
+    Name = "mancevice.dev"
+    Repo = "https://github.com/amancevice/alex.mancevice.dev"
+  }
 }
 
 # CLOUDFRONT

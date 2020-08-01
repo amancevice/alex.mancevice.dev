@@ -38,5 +38,5 @@ end
 
 desc "Bring up local HTTP server"
 task :up do
-  sh "ruby -run -e httpd alexander -p 8000"
+  sh "ruby -run -e httpd alexander"
 end

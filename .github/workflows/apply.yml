@@ -1,14 +1,14 @@
-name: plan
+name: apply
 on:
-  pull_request:
   push:
-  schedule:
-    - cron: '11 21 * * *'
+    tags:
+      - '*'
 jobs:
-  plan:
+  apply:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
       - uses: actions/setup-ruby@v1
       - uses: hashicorp/setup-terraform@v1
       - uses: aws-actions/configure-aws-credentials@v1
@@ -18,4 +18,5 @@ jobs:
           aws-region:            ${{ secrets.AWS_DEFAULT_REGION }}
           role-to-assume:        ${{ secrets.AWS_ROLE_ARN }}
           role-duration-seconds: 900
-      - run: rake plan
+      - run: pip install awscli
+      - run: rake apply sync cachebust

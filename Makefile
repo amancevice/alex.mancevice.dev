@@ -1,9 +1,3 @@
-.terraform:
-	terraform init
-
-.terraform/terraform.zip: *.tf alexander/* | .terraform
-	terraform plan -out $@
-
 .PHONY: plan apply clean clobber invalidation sync up
 
 plan: .terraform/terraform.zip
@@ -27,4 +21,10 @@ sync:
 
 up:
 	open http://localhost:8000/
-	ruby -run -e httpd alexander -p 8000
+	ruby -run -e httpd alexander
+
+.terraform:
+	terraform init
+
+.terraform/terraform.zip: *.tf alexander/* | .terraform
+	terraform plan -out $@
