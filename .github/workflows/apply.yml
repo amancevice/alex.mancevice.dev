@@ -19,4 +19,4 @@ jobs:
           role-to-assume:        ${{ secrets.AWS_ROLE_ARN }}
           role-duration-seconds: 900
       - run: pip install awscli
-      - run: rake apply sync cachebust
+      - run: make apply sync cachebust
