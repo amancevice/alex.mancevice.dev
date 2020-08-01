@@ -1,30 +1,33 @@
-.PHONY: plan apply clean clobber cachebust sync up
+.PHONY: plan apply sync cachebust clean clobber up
 
 plan: .terraform/terraform.zip
 
 apply: .terraform/terraform.zip
 	terraform apply $<
+	rm $<
+
+cachebust: | .terraform
+	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id)
 
 clean:
-	rm -rf .terraform/terraform.zip
+	rm -rf .terraform/terraform.zip .terraform/outputs
 
 clobber: clean
 	rm -rf .terraform
 
-cachebust:
-	aws cloudfront create-invalidation \
-	--distribution-id $$(terraform output cloudfront_distribution_id) \
-	--paths '/*'
-
-sync:
-	aws s3 sync alexander s3://alexander.mancevice.dev/
-
 up:
-	open http://localhost:8000/
-	ruby -run -e httpd alexander
+	@echo 'Starting server on http://localhost:8080/'
+	ruby -run -e httpd www
+
+sync: | .terraform
+	aws s3 sync www s3://$$(terraform output bucket_name)/
+
+.env:
+	cp $@.example $@
 
 .terraform:
 	terraform init
 
-.terraform/terraform.zip: *.tf alexander/* | .terraform
+.terraform/terraform.zip: *.tf | .terraform
+	terraform fmt -check
 	terraform plan -out $@
