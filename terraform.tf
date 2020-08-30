@@ -10,7 +10,7 @@ terraform {
 
 provider aws {
   region  = "us-east-1"
-  version = "~> 3.1"
+  version = "~> 3.3"
 }
 
 locals {
@@ -88,6 +88,28 @@ resource aws_cloudfront_distribution website {
 
 resource aws_cloudfront_origin_access_identity website {
   comment = "access-identity-alexander.mancevice.dev.s3.amazonaws.com"
+}
+
+# ROUTE53
+
+data aws_route53_zone mancevice_dev {
+  name = "mancevice.dev"
+}
+
+resource aws_route53_record alex {
+  zone_id = data.aws_route53_zone.mancevice_dev.zone_id
+  name    = "alex.mancevice.dev"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_cloudfront_distribution.website.domain_name]
+}
+
+resource aws_route53_record alexander {
+  zone_id = data.aws_route53_zone.mancevice_dev.zone_id
+  name    = "alexander.mancevice.dev"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_cloudfront_distribution.website.domain_name]
 }
 
 # S3 BUCKET
