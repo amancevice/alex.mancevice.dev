@@ -37,6 +37,8 @@ resource aws_cloudfront_distribution website {
   aliases = [
     "alex.mancevice.dev",
     "alexander.mancevice.dev",
+    "mancevice.dev",
+    "www.mancevice.dev"
   ]
 
   custom_error_response {
@@ -96,20 +98,110 @@ data aws_route53_zone mancevice_dev {
   name = "mancevice.dev"
 }
 
-resource aws_route53_record alex {
-  zone_id = data.aws_route53_zone.mancevice_dev.zone_id
-  name    = "alex.mancevice.dev"
-  type    = "CNAME"
-  ttl     = 300
-  records = [aws_cloudfront_distribution.website.domain_name]
+# ROUTE53 :: RECORDS
+
+resource aws_route53_record a {
+  name    = "mancevice.dev"
+  type    = "A"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
 }
 
-resource aws_route53_record alexander {
-  zone_id = data.aws_route53_zone.mancevice_dev.zone_id
+resource aws_route53_record aaaa {
+  name    = "mancevice.dev"
+  type    = "AAAA"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
+}
+
+resource aws_route53_record alex_a {
+  name    = "alex.mancevice.dev"
+  type    = "A"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
+}
+
+resource aws_route53_record alex_aaaa {
+  name    = "alex.mancevice.dev"
+  type    = "AAAA"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
+}
+
+resource aws_route53_record alexander_a {
   name    = "alexander.mancevice.dev"
-  type    = "CNAME"
-  ttl     = 300
-  records = [aws_cloudfront_distribution.website.domain_name]
+  type    = "A"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
+}
+
+resource aws_route53_record alexander_aaaa {
+  name    = "alexander.mancevice.dev"
+  type    = "AAAA"
+  zone_id = data.aws_route53_zone.mancevice_dev.id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+  }
+}
+
+# ROUTE53 :: HEALTH CHECKS
+
+resource aws_route53_health_check alex_mancevice_dev {
+  failure_threshold = "3"
+  fqdn              = "alex.mancevice.dev"
+  measure_latency   = true
+  port              = 443
+  request_interval  = "30"
+  tags              = merge(local.tags, { Name = "alex.mancevice.dev" })
+  type              = "HTTPS"
+}
+
+resource aws_route53_health_check alexander_mancevice_dev {
+  failure_threshold = "3"
+  fqdn              = "alexander.mancevice.dev"
+  measure_latency   = true
+  port              = 443
+  request_interval  = "30"
+  tags              = merge(local.tags, { Name = "alexander.mancevice.dev" })
+  type              = "HTTPS"
+}
+
+resource aws_route53_health_check mancevice_dev {
+  failure_threshold = "3"
+  fqdn              = "mancevice.dev"
+  measure_latency   = true
+  port              = 443
+  request_interval  = "30"
+  tags              = merge(local.tags, { Name = "mancevice.dev" })
+  type              = "HTTPS"
 }
 
 # S3 BUCKET
