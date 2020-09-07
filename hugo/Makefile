@@ -7,7 +7,7 @@ apply: .terraform/terraform.zip
 	rm $<
 
 cachebust: | .terraform
-	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output -raw cloudfront_distribution_id)
+	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id)
 
 clean:
 	rm -rf .terraform/terraform.zip .terraform/outputs
@@ -16,11 +16,12 @@ clobber: clean
 	rm -rf .terraform
 
 up:
-	@echo 'Starting server on http://localhost:8080/'
-	ruby -run -e httpd www
+	@echo 'Starting server on http://localhost:1313/'
+	hugo -D
+	ruby -run -e httpd public -p 1313
 
 sync: | .terraform
-	aws s3 sync alexander s3://$$(terraform output bucket_name)/
+	aws s3 sync public s3://$$(terraform output bucket_name)/
 
 .env:
 	cp $@.example $@
