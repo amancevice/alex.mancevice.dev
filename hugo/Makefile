@@ -21,7 +21,7 @@ up:
 	ruby -run -e httpd public -p 1313
 
 sync: | .terraform
-	aws s3 sync public s3://$$(terraform output bucket_name)/ --delete
+	aws s3 sync public s3://alexander.mancevice.dev/ --delete
 
 .env:
 	cp $@.example $@
