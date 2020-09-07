@@ -1,6 +1,6 @@
 ---
-title: "Using Amazon Step Functions"
-date: 2020-08-22T16:52:08-04:00
+title: Using Amazon Step Functions
+date: 2020-08-22
 draft: false
 toc: true
 images:

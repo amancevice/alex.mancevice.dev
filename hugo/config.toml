@@ -26,9 +26,10 @@ title        = "Alexander Mancevice"
 
 [params]
   dateform        = "Jan 2, 2006"
-  dateformShort   = "Jan 2"
-  # dateformNum     = "2006-01-02"
+  dateformNum     = "2006-01-02"
   dateformNumTime = "January 2, 2006"
+  dateformShort   = "Jan 2"
+  defaultTheme    = "light"
   description     = "Alexander Mancevice's thoughts & feelings"
   homeSubtitle    = "Senior Software Engineer"
 
@@ -62,7 +63,7 @@ title        = "Alexander Mancevice"
   #   url  = "https://twitter.com/smallweirdnumbr"
 
 [permalinks]
-  posts = "/:year/:month/:title"
+  posts = "/:year/:1/:2/:title"
 
 [taxonomies]
   tag      = "tags"
