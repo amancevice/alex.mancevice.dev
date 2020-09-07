@@ -1,14 +1,28 @@
-baseURL = "https://alex.mancevice.dev/"
+baseURL      = "https://alex.mancevice.dev/"
 languageCode = "en-us"
-title = "Alexander Mancevice"
-theme = "hello-friend-ng"
+theme        = "hello-friend-ng"
+title        = "Alexander Mancevice"
 
 [author]
   name = "small weird number"
 
-[taxonomies]
-  tag      = "tags"
-  category = "categories"
+[markup]
+  [markup.highlight]
+    style = "paraiso-dark"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name       = "About"
+    url        = "about"
+  [[menu.main]]
+    identifier = "posts"
+    name       = "Posts"
+    url        = "posts"
+  [[menu.main]]
+    identifier = "work"
+    name       = "Work"
+    url        = "work"
 
 [params]
   dateform        = "Jan 2, 2006"
@@ -47,16 +61,9 @@ theme = "hello-friend-ng"
   #   name = "twitter"
   #   url  = "https://twitter.com/smallweirdnumbr"
 
-[menu]
-  [[menu.main]]
-    identifier = "about"
-    name       = "About"
-    url        = "about"
-  [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "posts"
-  [[menu.main]]
-    identifier = "work"
-    name       = "Work"
-    url        = "work"
+[permalinks]
+  posts = "/:year/:month/:title"
+
+[taxonomies]
+  tag      = "tags"
+  category = "categories"
