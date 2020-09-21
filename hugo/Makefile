@@ -1,34 +1,10 @@
-.PHONY: plan apply sync cachebust clean clobber up
+public: config.toml $(shell find . -type d -depth 1 -not -name 'public' -not -name 'resources' | xargs find)
+	hugo
 
-plan: .terraform/terraform.zip
-
-apply: .terraform/terraform.zip
-	terraform apply $<
-	rm $<
-
-cachebust: | .terraform
-	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id)
+.PHONY: clean sync
 
 clean:
-	rm -rf .terraform/terraform.zip .terraform/outputs
+	rm -rf public
 
-clobber: clean
-	rm -rf .terraform
-
-up:
-	@echo 'Starting server on http://localhost:1313/'
-	hugo -D
-	ruby -run -e httpd public -p 1313
-
-sync: | .terraform
-	aws s3 sync public s3://alexander.mancevice.dev/ --delete
-
-.env:
-	cp $@.example $@
-
-.terraform:
-	terraform init
-
-.terraform/terraform.zip: *.tf | .terraform
-	terraform fmt -check
-	terraform plan -out $@
+sync: | public
+	aws s3 sync $| s3://alexander.mancevice.dev/ --delete
