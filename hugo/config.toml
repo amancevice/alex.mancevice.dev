@@ -1,4 +1,5 @@
 baseURL      = "https://alex.mancevice.dev/"
+enableEmoji  = true
 languageCode = "en-us"
 theme        = "hello-friend-ng"
 title        = "Alexander Mancevice"
