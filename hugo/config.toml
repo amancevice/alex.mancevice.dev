@@ -10,20 +10,6 @@ title        = "Alexander Mancevice"
   [markup.highlight]
     style = "paraiso-dark"
 
-[menu]
-  [[menu.main]]
-    identifier = "about"
-    name       = "About"
-    url        = "about"
-  [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "posts"
-  [[menu.main]]
-    identifier = "work"
-    name       = "Work"
-    url        = "work"
-
 [params]
   dateform        = "Jan 2, 2006"
   dateformNum     = "2006-01-02"
@@ -34,7 +20,7 @@ title        = "Alexander Mancevice"
   homeSubtitle    = "Senior Software Engineer"
 
   [params.logo]
-    logoText           = "cd ~" # "^,>"
+    logoText           = "cd ~" # ">`,>"
     logoHomeLink       = "/"
     logoCursorDisabled = false
     logoCursorColor    = "#33FF99"
@@ -49,15 +35,19 @@ title        = "Alexander Mancevice"
   [[params.social]]
     name = "docker"
     url  = "https://hub.docker.com/u/amancevice"
+
   [[params.social]]
     name = "github2"
     url  = "https://github.com/amancevice"
+
   [[params.social]]
     name = "linkedin"
     url  = "https://www.linkedin.com/in/amancevice"
+
   [[params.social]]
     name = "terraform"
     url  = "https://registry.terraform.io/namespaces/amancevice"
+
   # [[params.social]]
   #   name = "twitter"
   #   url  = "https://twitter.com/smallweirdnumbr"

@@ -1,7 +1,8 @@
 ---
 title: "About"
-date: 2020-08-31T18:32:17-04:00
-draft: false
+menu:
+  main:
+    url: about/index.html
 ---
 
 I am a senior software engineer who enjoys working with emerging technology and design patterns; particularly open source tools, serverless infrastructure, and microservices.
