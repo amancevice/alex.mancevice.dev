@@ -1,3 +1,6 @@
+hugo/public: hugo/config.toml $(shell find hugo -type d -depth 1 -not -name 'public' -not -name 'resources' | xargs find)
+	cd hugo ; hugo
+
 .PHONY: plan apply sync cachebust clean clobber up
 
 plan: .terraform/terraform.zip
@@ -7,7 +10,7 @@ apply: .terraform/terraform.zip
 	rm $<
 
 cachebust: | .terraform
-	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id)
+	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id) | jq
 
 clean:
 	rm -rf .terraform/terraform.zip .terraform/outputs
@@ -19,8 +22,8 @@ up:
 	@echo 'Starting server on http://localhost:8080/'
 	ruby -run -e httpd www
 
-sync: | .terraform
-	aws s3 sync alexander s3://$$(terraform output bucket_name)/
+sync: | hugo/public
+	aws s3 sync hugo/public s3://$$(terraform output bucket_name)/
 
 .env:
 	cp $@.example $@

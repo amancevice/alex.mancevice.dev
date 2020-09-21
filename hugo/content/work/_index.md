@@ -6,7 +6,7 @@ menu:
 ---
 ## CargoMetrics
 
-| April 2013 — Present | Boston, MA
+| Apr 2013 — Present | Boston, MA
 |:-|-:
 
 > Designed core components of CargoMetrics’ commodity trading system, including
@@ -26,7 +26,7 @@ menu:
 
 ## DataXu
 
-| November 2010 — March 2013 | Boston, MA
+| Nov 2010 — Mar 2013 | Boston, MA
 |:-|-:
 
 > First hire for DataXu’s original Solutions Engineering team and helped craft
@@ -42,7 +42,7 @@ menu:
 
 ## Vamosa
 
-| November 2008 — November 2010 | Boston, MA
+| Nov 2008 — Nov 2010 | Boston, MA
 |:-|-:
 
 > Designed, implemented, and executed the seamless transition of clients’
