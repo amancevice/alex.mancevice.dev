@@ -1,4 +1,5 @@
 hugo/public: hugo/config.toml $(shell find hugo -type d -depth 1 -not -name 'public' -not -name 'resources' | xargs find)
+	rm -rf $@
 	cd hugo ; hugo
 
 .PHONY: plan apply sync cachebust clean clobber up
@@ -23,7 +24,7 @@ up:
 	ruby -run -e httpd www
 
 sync: | hugo/public
-	aws s3 sync hugo/public s3://$$(terraform output bucket_name)/
+	aws s3 sync hugo/public s3://$$(terraform output bucket_name)/ --delete
 
 .env:
 	cp $@.example $@

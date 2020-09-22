@@ -4,6 +4,8 @@ menu:
   main:
     url: work/index.html
 ---
+[Resume](./resume.html)
+
 ## CargoMetrics
 
 | Apr 2013 — Present | Boston, MA
@@ -52,4 +54,51 @@ menu:
 > Worked on site for clients in both a member of a small team and as a solo
 > project executor to achieve success.
 
-[Resume](./resume.html)
+# Portfolio
+
+## Brutalismbot
+Web App | Ruby | NodeJS\
+[GitHub](https://github.com/brutalismbot) | [Twitter](https://twitter.com/brutalismbot) | [brutalismbot.com](https://www.brutalismbot.com)
+
+> Serverless app that mirrors posts from /r/brutalism to Twitter or Slack. The
+> project is hosted on AWS using a completely serverless infrastructure.
+> Alongside the core application is a static website hosted on S3 and
+> distributed via CloudFront; support email address configured with SES, and
+> application health monitoring via CloudWatch.
+
+## Rum Runner
+Build Tool | Ruby | Docker\
+[GitHub](https://github.com/amancevice/rumrunner) | [RubyGems](https://rubygems.org/gems/rumrunner)
+
+> DSL for writing declarative Docker-based workflows using Rake — Ruby’s
+> popular make-like utility for working with build tasks. Users can install the
+> gem from RubyGems, define their build, and use the rake CLI to build
+> exportable artifacts inside the Docker build container or run arbitrary
+> commands inside ephemeral containers at different stages of the build.
+
+## Serverless PyPI
+Terraform Module | Python | Terraform\
+[GitHub](https://github.com/amancevice/terraform-aws-serverless-pypi) | [Terraform Registry](https://registry.terraform.io/modules/amancevice/serverless-pypi/aws)
+
+> Terraform module for deploying a custom PyPI Index on AWS backed by S3. Users
+> can store Python packages on S3 and retrieve them with pip over HTTP using
+> API Gateway and a Lambda proxy function. An additional module is available to
+> attach Cognito-based authentication to your index.
+
+## SlackEnd
+Express Middleware | NodeJS | Express\
+[GitHub](https://github.com/amancevice/slackend) | [npm](https://www.npmjs.com/package/slackend)
+
+> Middleware for Express to deploy an asynchronous REST API for developing
+> Slack Apps. Requests from Slack are received, processed, and enhanced with
+> routing instructions to be published to the notification/queuing service of
+> your choice. Because SlackEnd is not opinionated about how messages are
+> handled, extending Slack apps is easy and requires no code redeployment.
+
+## Superset
+Docker Image | Python | Docker\
+[GitHub](https://github.com/amancevice/docker-superset) | [Docker Hub](https://hub.docker.com/r/amancevice/superset)
+
+> The most-popular public Docker image for the Apache data visualization tool,
+> Superset. In addition to tagged updates, weekly automated builds allow users
+> to test features on the HEAD of the source repository.
