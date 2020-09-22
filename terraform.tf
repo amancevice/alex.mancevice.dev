@@ -24,8 +24,9 @@ locals {
 # CLOUDFRONT
 
 data aws_acm_certificate cert {
-  domain   = "mancevice.dev"
-  statuses = ["ISSUED"]
+  domain      = "mancevice.dev"
+  most_recent = true
+  statuses    = ["ISSUED"]
 }
 
 resource aws_cloudfront_distribution website {
