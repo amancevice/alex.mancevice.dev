@@ -180,6 +180,7 @@ resource aws_route53_record alexander_aaaa {
 
 # ROUTE53 :: HEALTH CHECKS
 
+/*
 resource aws_route53_health_check alex_mancevice_dev {
   failure_threshold = "3"
   fqdn              = "alex.mancevice.dev"
@@ -209,6 +210,7 @@ resource aws_route53_health_check mancevice_dev {
   tags              = merge(local.tags, { Name = "mancevice.dev" })
   type              = "HTTPS"
 }
+*/
 
 # S3 BUCKET
 
