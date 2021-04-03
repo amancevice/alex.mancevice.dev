@@ -5,12 +5,18 @@ terraform {
     region = "us-east-1"
   }
 
-  required_version = "~> 0.13"
+  required_version = "~> 0.14"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
 }
 
 provider aws {
   region  = "us-east-1"
-  version = "~> 3.3"
 }
 
 locals {
