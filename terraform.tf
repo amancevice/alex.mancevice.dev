@@ -17,13 +17,13 @@ terraform {
 
 provider aws {
   region  = "us-east-1"
-}
 
-locals {
-  tags = {
-    App  = "alexander.mancevice.dev"
-    Name = "mancevice.dev"
-    Repo = "https://github.com/amancevice/alex.mancevice.dev"
+  default_tags {
+    tags = {
+      App  = "alexander.mancevice.dev"
+      Name = "mancevice.dev"
+      Repo = "https://github.com/amancevice/alex.mancevice.dev"
+    }
   }
 }
 
@@ -187,7 +187,7 @@ resource aws_route53_health_check alex_mancevice_dev {
   measure_latency   = true
   port              = 443
   request_interval  = "30"
-  tags              = merge(local.tags, { Name = "alex.mancevice.dev" })
+  tags              = { Name = "alex.mancevice.dev" }
   type              = "HTTPS"
 }
 
@@ -197,7 +197,7 @@ resource aws_route53_health_check alexander_mancevice_dev {
   measure_latency   = true
   port              = 443
   request_interval  = "30"
-  tags              = merge(local.tags, { Name = "alexander.mancevice.dev" })
+  tags              = { Name = "alexander.mancevice.dev" }
   type              = "HTTPS"
 }
 
@@ -207,7 +207,7 @@ resource aws_route53_health_check mancevice_dev {
   measure_latency   = true
   port              = 443
   request_interval  = "30"
-  tags              = merge(local.tags, { Name = "mancevice.dev" })
+  tags              = { Name = "mancevice.dev" }
   type              = "HTTPS"
 }
 */
@@ -232,7 +232,6 @@ resource aws_s3_bucket website {
   bucket        = "alexander.mancevice.dev"
   force_destroy = false
   policy        = data.aws_iam_policy_document.website.json
-  tags          = local.tags
 
   website {
     error_document = "error.html"
