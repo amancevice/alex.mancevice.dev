@@ -7,7 +7,7 @@ apply: .terraform/terraform.zip
 	rm $<
 
 cachebust: | .terraform
-	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output cloudfront_distribution_id)
+	aws cloudfront create-invalidation --paths '/*' --distribution-id $$(terraform output -raw cloudfront_distribution_id)
 
 clean:
 	rm -rf .terraform/terraform.zip .terraform/outputs
