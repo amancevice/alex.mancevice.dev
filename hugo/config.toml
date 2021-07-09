@@ -5,7 +5,7 @@ theme        = "hello-friend-ng"
 title        = "Alexander Mancevice"
 
 [author]
-  name = "small weird number"
+  name = "Alexander Mancevice"
 
 [markup]
   [markup.highlight]
