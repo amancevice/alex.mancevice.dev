@@ -1,5 +1,5 @@
 terraform {
-  backend s3 {
+  backend "s3" {
     bucket = "mancevice.dev"
     key    = "terraform/alex.mancevice.dev.tfstate"
     region = "us-east-1"
@@ -15,8 +15,8 @@ terraform {
   }
 }
 
-provider aws {
-  region  = "us-east-1"
+provider "aws" {
+  region = "us-east-1"
 
   default_tags {
     tags = {
@@ -29,12 +29,12 @@ provider aws {
 
 # CLOUDFRONT
 
-data aws_acm_certificate cert {
+data "aws_acm_certificate" "cert" {
   domain   = "mancevice.dev"
   statuses = ["ISSUED"]
 }
 
-resource aws_cloudfront_distribution website {
+resource "aws_cloudfront_distribution" "website" {
   default_root_object = "index.html"
   enabled             = true
   is_ipv6_enabled     = true
@@ -94,19 +94,19 @@ resource aws_cloudfront_distribution website {
   }
 }
 
-resource aws_cloudfront_origin_access_identity website {
+resource "aws_cloudfront_origin_access_identity" "website" {
   comment = "access-identity-alexander.mancevice.dev.s3.amazonaws.com"
 }
 
 # ROUTE53
 
-data aws_route53_zone mancevice_dev {
+data "aws_route53_zone" "mancevice_dev" {
   name = "mancevice.dev"
 }
 
 # ROUTE53 :: RECORDS
 
-resource aws_route53_record a {
+resource "aws_route53_record" "a" {
   name    = "mancevice.dev"
   type    = "A"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -118,7 +118,7 @@ resource aws_route53_record a {
   }
 }
 
-resource aws_route53_record aaaa {
+resource "aws_route53_record" "aaaa" {
   name    = "mancevice.dev"
   type    = "AAAA"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -130,7 +130,7 @@ resource aws_route53_record aaaa {
   }
 }
 
-resource aws_route53_record alex_a {
+resource "aws_route53_record" "alex_a" {
   name    = "alex.mancevice.dev"
   type    = "A"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -142,7 +142,7 @@ resource aws_route53_record alex_a {
   }
 }
 
-resource aws_route53_record alex_aaaa {
+resource "aws_route53_record" "alex_aaaa" {
   name    = "alex.mancevice.dev"
   type    = "AAAA"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -154,7 +154,7 @@ resource aws_route53_record alex_aaaa {
   }
 }
 
-resource aws_route53_record alexander_a {
+resource "aws_route53_record" "alexander_a" {
   name    = "alexander.mancevice.dev"
   type    = "A"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -166,7 +166,7 @@ resource aws_route53_record alexander_a {
   }
 }
 
-resource aws_route53_record alexander_aaaa {
+resource "aws_route53_record" "alexander_aaaa" {
   name    = "alexander.mancevice.dev"
   type    = "AAAA"
   zone_id = data.aws_route53_zone.mancevice_dev.id
@@ -214,7 +214,7 @@ resource aws_route53_health_check mancevice_dev {
 
 # S3 BUCKET
 
-data aws_iam_policy_document website {
+data "aws_iam_policy_document" "website" {
   statement {
     sid       = "AllowCloudFront"
     actions   = ["s3:GetObject"]
@@ -227,7 +227,7 @@ data aws_iam_policy_document website {
   }
 }
 
-resource aws_s3_bucket website {
+resource "aws_s3_bucket" "website" {
   acl           = "private"
   bucket        = "alexander.mancevice.dev"
   force_destroy = false
@@ -239,7 +239,7 @@ resource aws_s3_bucket website {
   }
 }
 
-resource aws_s3_bucket_public_access_block website {
+resource "aws_s3_bucket_public_access_block" "website" {
   block_public_acls       = true
   block_public_policy     = true
   bucket                  = aws_s3_bucket.website.id
@@ -249,12 +249,12 @@ resource aws_s3_bucket_public_access_block website {
 
 # OUTPUTS
 
-output bucket_name {
+output "bucket_name" {
   description = "S3 website bucket name."
   value       = aws_s3_bucket.website.bucket
 }
 
-output cloudfront_distribution_id {
+output "cloudfront_distribution_id" {
   description = "CloudFront distribution ID."
   value       = aws_cloudfront_distribution.website.id
 }
