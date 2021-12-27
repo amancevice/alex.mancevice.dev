@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket = "mancevice.dev"
-    key    = "terraform/alex.mancevice.dev.tfstate"
-    region = "us-east-1"
+    bucket = "mancevice-dev-us-west-2-terraform"
+    key    = "alexander.tfstate"
+    region = "us-west-2"
   }
 
   required_version = "~> 1.0"
@@ -15,21 +15,34 @@ terraform {
   }
 }
 
+locals {
+  tags = {
+    App  = "alexander.mancevice.dev"
+    Name = "mancevice.dev"
+    Repo = "https://github.com/amancevice/alex.mancevice.dev"
+  }
+}
+
 provider "aws" {
+  region = "us-west-2"
+
+  default_tags { tags = local.tags }
+}
+
+provider "aws" {
+  alias  = "us_east_1"
   region = "us-east-1"
 
-  default_tags {
-    tags = {
-      App  = "alexander.mancevice.dev"
-      Name = "mancevice.dev"
-      Repo = "https://github.com/amancevice/alex.mancevice.dev"
-    }
-  }
+  default_tags { tags = local.tags }
+}
+
+data "aws_region" "current" {
 }
 
 # CLOUDFRONT
 
 data "aws_acm_certificate" "cert" {
+  provider = aws.us_east_1
   domain   = "mancevice.dev"
   statuses = ["ISSUED"]
 }
@@ -60,7 +73,7 @@ resource "aws_cloudfront_distribution" "website" {
     default_ttl            = 86400
     max_ttl                = 31536000
     min_ttl                = 0
-    target_origin_id       = aws_s3_bucket.website.bucket
+    target_origin_id       = aws_s3_bucket.alexander.bucket
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -73,8 +86,8 @@ resource "aws_cloudfront_distribution" "website" {
   }
 
   origin {
-    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_id   = aws_s3_bucket.website.bucket
+    domain_name = aws_s3_bucket.alexander.bucket_regional_domain_name
+    origin_id   = aws_s3_bucket.alexander.bucket
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.website.cloudfront_access_identity_path
@@ -214,11 +227,11 @@ resource aws_route53_health_check mancevice_dev {
 
 # S3 BUCKET
 
-data "aws_iam_policy_document" "website" {
+data "aws_iam_policy_document" "alexander" {
   statement {
     sid       = "AllowCloudFront"
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::alexander.mancevice.dev/*"]
+    resources = ["arn:aws:s3:::mancevice-dev-${data.aws_region.current.name}-alexander/*"]
 
     principals {
       type        = "AWS"
@@ -227,11 +240,9 @@ data "aws_iam_policy_document" "website" {
   }
 }
 
-resource "aws_s3_bucket" "website" {
-  acl           = "private"
-  bucket        = "alexander.mancevice.dev"
-  force_destroy = false
-  policy        = data.aws_iam_policy_document.website.json
+resource "aws_s3_bucket" "alexander" {
+  bucket = "mancevice-dev-${data.aws_region.current.name}-alexander"
+  policy = data.aws_iam_policy_document.alexander.json
 
   website {
     error_document = "error.html"
@@ -239,10 +250,10 @@ resource "aws_s3_bucket" "website" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "website" {
+resource "aws_s3_bucket_public_access_block" "alexander" {
   block_public_acls       = true
   block_public_policy     = true
-  bucket                  = aws_s3_bucket.website.id
+  bucket                  = aws_s3_bucket.alexander.id
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
@@ -251,7 +262,7 @@ resource "aws_s3_bucket_public_access_block" "website" {
 
 output "bucket_name" {
   description = "S3 website bucket name."
-  value       = aws_s3_bucket.website.bucket
+  value       = aws_s3_bucket.alexander.bucket
 }
 
 output "cloudfront_distribution_id" {
