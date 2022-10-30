@@ -44,6 +44,7 @@ data "aws_acm_certificate" "cert" {
 }
 
 resource "aws_cloudfront_distribution" "website" {
+  comment             = "alexander.mancevice.dev"
   default_root_object = "index.html"
   enabled             = true
   is_ipv6_enabled     = true
@@ -98,7 +99,7 @@ resource "aws_cloudfront_distribution" "website" {
 
   viewer_certificate {
     acm_certificate_arn      = data.aws_acm_certificate.cert.arn
-    minimum_protocol_version = "TLSv1.1_2016"
+    minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
 }
