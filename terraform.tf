@@ -1,3 +1,7 @@
+#################
+#   TERRAFORM   #
+#################
+
 terraform {
   required_version = "~> 1.0"
 
@@ -15,13 +19,23 @@ terraform {
   }
 }
 
+###########
+#   AWS   #
+###########
+
+variable "AWS_ROLE_ARN" { type = string }
+
 provider "aws" {
   region = "us-west-2"
+  assume_role { role_arn = var.AWS_ROLE_ARN }
+  default_tags { tags = local.tags }
 }
 
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
+  assume_role { role_arn = var.AWS_ROLE_ARN }
+  default_tags { tags = local.tags }
 }
 
 locals {
@@ -149,7 +163,7 @@ resource "aws_route53_record" "records" {
 #   measure_latency   = true
 #   port              = 443
 #   request_interval  = "30"
-#   tags              = merge(local.tags, { Name = each.value })
+#   tags              = { Name = each.value }
 #   type              = "HTTPS"
 # }
 
@@ -173,7 +187,6 @@ data "aws_iam_policy_document" "website" {
 resource "aws_s3_bucket" "website" {
   bucket        = "mancevice-dev-us-west-2-alexander"
   force_destroy = false
-  tags          = local.tags
 }
 
 resource "aws_s3_bucket_policy" "website" {
