@@ -6,9 +6,27 @@ menu:
 ---
 [Resume](./resume.html)
 
+## Kickstarter
+
+| Apr 2021 — PRESENT | Brooklyn, New York
+|:-|-:
+
+> Lead planning and transition from cloud infrastructure from disparate
+> CloudFormation templates (where existing) to Terraform monorepo.
+>
+> Lead planning and transition from Chef to custom AMIs using AWS EC2 Image Builder.
+>
+> Developed internal universal command line interface for executing developer
+> tasks such as building, testing, and deploying.
+>
+> Set up custom Slack app for internal workflows and automated alerting.
+> Introduced serverless patterns to the engineering team, including migrating a
+> legacy system from AWS Elastic Container System (ECS) to AWS Lambda + API Gateway,
+> leading to decreased latency and operational costs.
+
 ## CargoMetrics
 
-| Apr 2013 — Present | Boston, MA
+| Apr 2013 — Mar 2021 | Boston, Massachusetts
 |:-|-:
 
 > Designed core components of CargoMetrics’ commodity trading system, including
@@ -28,7 +46,7 @@ menu:
 
 ## DataXu
 
-| Nov 2010 — Mar 2013 | Boston, MA
+| Nov 2010 — Mar 2013 | Boston, Massachusetts
 |:-|-:
 
 > First hire for DataXu’s original Solutions Engineering team and helped craft
@@ -44,7 +62,7 @@ menu:
 
 ## Vamosa
 
-| Nov 2008 — Nov 2010 | Boston, MA
+| Nov 2008 — Nov 2010 | Boston, Massachusetts
 |:-|-:
 
 > Designed, implemented, and executed the seamless transition of clients’
