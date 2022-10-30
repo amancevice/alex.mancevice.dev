@@ -4,7 +4,7 @@ menu:
   main:
     url: work/index.html
 ---
-[Resume](./work/resume.html)
+[Resume](./work/resume.html) [[pdf]](./work/amancevice.pdf)
 
 ## Kickstarter
 
