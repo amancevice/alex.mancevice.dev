@@ -1,18 +1,27 @@
 terraform {
-  backend "s3" {
-    bucket = "mancevice-dev-us-west-2-terraform"
-    key    = "alexander.tfstate"
-    region = "us-west-2"
-  }
-
   required_version = "~> 1.0"
+
+  cloud {
+    organization = "mancevice-dev"
+
+    workspaces { name = "website" }
+  }
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
+}
+
+provider "aws" {
+  region = "us-west-2"
+}
+
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
 }
 
 locals {
@@ -23,28 +32,15 @@ locals {
   }
 }
 
-provider "aws" {
-  region = "us-west-2"
-
-  default_tags { tags = local.tags }
-}
-
-provider "aws" {
-  alias  = "us_east_1"
-  region = "us-east-1"
-
-  default_tags { tags = local.tags }
-}
-
-data "aws_region" "current" {
-}
-
-# CLOUDFRONT
+##################
+#   CLOUDFRONT   #
+##################
 
 data "aws_acm_certificate" "cert" {
-  provider = aws.us_east_1
-  domain   = "mancevice.dev"
-  statuses = ["ISSUED"]
+  provider    = aws.us_east_1
+  domain      = "mancevice.dev"
+  most_recent = true
+  statuses    = ["ISSUED"]
 }
 
 resource "aws_cloudfront_distribution" "website" {
@@ -111,127 +107,60 @@ resource "aws_cloudfront_origin_access_identity" "website" {
   comment = "access-identity-alexander.mancevice.dev.s3.amazonaws.com"
 }
 
-# ROUTE53
+###############
+#   ROUTE53   #
+###############
 
 data "aws_route53_zone" "mancevice_dev" {
   name = "mancevice.dev"
 }
 
-# ROUTE53 :: RECORDS
+resource "aws_route53_record" "records" {
+  for_each = {
+    A              = { name : "mancevice.dev", type : "A" }
+    AAAA           = { name : "mancevice.dev", type : "AAAA" }
+    alex_A         = { name : "alex.mancevice.dev", type : "A" }
+    alex_AAAA      = { name : "alex.mancevice.dev", type : "AAAA" }
+    alexander_A    = { name : "alexander.mancevice.dev", type : "A" }
+    alexander_AAAA = { name : "alexander.mancevice.dev", type : "AAAA" }
+  }
 
-resource "aws_route53_record" "a" {
-  name    = "mancevice.dev"
-  type    = "A"
+  name    = each.value.name
+  type    = each.value.type
   zone_id = data.aws_route53_zone.mancevice_dev.id
 
   alias {
-    evaluate_target_health = true
+    evaluate_target_health = false
     name                   = aws_cloudfront_distribution.website.domain_name
     zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
   }
 }
 
-resource "aws_route53_record" "aaaa" {
-  name    = "mancevice.dev"
-  type    = "AAAA"
-  zone_id = data.aws_route53_zone.mancevice_dev.id
+# resource "aws_route53_health_check" "health_checks" {
+#   for_each = {
+#     alex_mancevice_dev      = "alex.mancevice.dev"
+#     alexander_mancevice_dev = "alexander.mancevice.dev"
+#     mancevice_dev           = "mancevice.dev"
+#   }
 
-  alias {
-    evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
+#   failure_threshold = "3"
+#   fqdn              = each.value
+#   measure_latency   = true
+#   port              = 443
+#   request_interval  = "30"
+#   tags              = merge(local.tags, { Name = each.value })
+#   type              = "HTTPS"
+# }
 
-resource "aws_route53_record" "alex_a" {
-  name    = "alex.mancevice.dev"
-  type    = "A"
-  zone_id = data.aws_route53_zone.mancevice_dev.id
+#################
+#   S3 BUCKET   #
+#################
 
-  alias {
-    evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource "aws_route53_record" "alex_aaaa" {
-  name    = "alex.mancevice.dev"
-  type    = "AAAA"
-  zone_id = data.aws_route53_zone.mancevice_dev.id
-
-  alias {
-    evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource "aws_route53_record" "alexander_a" {
-  name    = "alexander.mancevice.dev"
-  type    = "A"
-  zone_id = data.aws_route53_zone.mancevice_dev.id
-
-  alias {
-    evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-resource "aws_route53_record" "alexander_aaaa" {
-  name    = "alexander.mancevice.dev"
-  type    = "AAAA"
-  zone_id = data.aws_route53_zone.mancevice_dev.id
-
-  alias {
-    evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-  }
-}
-
-# ROUTE53 :: HEALTH CHECKS
-
-/*
-resource aws_route53_health_check alex_mancevice_dev {
-  failure_threshold = "3"
-  fqdn              = "alex.mancevice.dev"
-  measure_latency   = true
-  port              = 443
-  request_interval  = "30"
-  tags              = { Name = "alex.mancevice.dev" }
-  type              = "HTTPS"
-}
-
-resource aws_route53_health_check alexander_mancevice_dev {
-  failure_threshold = "3"
-  fqdn              = "alexander.mancevice.dev"
-  measure_latency   = true
-  port              = 443
-  request_interval  = "30"
-  tags              = { Name = "alexander.mancevice.dev" }
-  type              = "HTTPS"
-}
-
-resource aws_route53_health_check mancevice_dev {
-  failure_threshold = "3"
-  fqdn              = "mancevice.dev"
-  measure_latency   = true
-  port              = 443
-  request_interval  = "30"
-  tags              = { Name = "mancevice.dev" }
-  type              = "HTTPS"
-}
-*/
-
-# S3 BUCKET
-
-data "aws_iam_policy_document" "alexander" {
+data "aws_iam_policy_document" "website" {
   statement {
     sid       = "AllowCloudFront"
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::mancevice-dev-${data.aws_region.current.name}-alexander/*"]
+    resources = ["${aws_s3_bucket.website.arn}/*"]
 
     principals {
       type        = "AWS"
@@ -240,17 +169,18 @@ data "aws_iam_policy_document" "alexander" {
   }
 }
 
-resource "aws_s3_bucket" "alexander" {
-  bucket = "mancevice-dev-${data.aws_region.current.name}-alexander"
-  policy = data.aws_iam_policy_document.alexander.json
-
-  website {
-    error_document = "error.html"
-    index_document = "index.html"
-  }
+resource "aws_s3_bucket" "website" {
+  bucket        = "mancevice-dev-us-west-2-alexander"
+  force_destroy = false
+  tags          = local.tags
 }
 
-resource "aws_s3_bucket_public_access_block" "alexander" {
+resource "aws_s3_bucket_policy" "website" {
+  bucket = aws_s3_bucket.website.id
+  policy = data.aws_iam_policy_document.website.json
+}
+
+resource "aws_s3_bucket_public_access_block" "website" {
   block_public_acls       = true
   block_public_policy     = true
   bucket                  = aws_s3_bucket.alexander.id
@@ -258,7 +188,21 @@ resource "aws_s3_bucket_public_access_block" "alexander" {
   restrict_public_buckets = true
 }
 
-# OUTPUTS
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.website.id
+
+  error_document {
+    key = "error.html"
+  }
+
+  index_document {
+    suffix = "index.html"
+  }
+}
+
+###############
+#   OUTPUTS   #
+###############
 
 output "bucket_name" {
   description = "S3 website bucket name."
