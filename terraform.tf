@@ -38,7 +38,26 @@ provider "aws" {
   default_tags { tags = local.tags }
 }
 
+##############
+#   LOCALS   #
+##############
+
 locals {
+  mime_map = {
+    css         = "text/css"
+    html        = "text/html"
+    ico         = "image/x-icon"
+    js          = "text/javascript"
+    map         = "application/json"
+    pdf         = "application/pdf"
+    png         = "image/png"
+    svg         = "image/svg+xml"
+    webmanifest = "application/manifest+json"
+    woff        = "font/woff"
+    woff2       = "font/woff2"
+    xml         = "application/xml"
+  }
+
   tags = {
     App  = "alexander.mancevice.dev"
     Name = "mancevice.dev"
@@ -212,6 +231,19 @@ resource "aws_s3_bucket_website_configuration" "website" {
   index_document {
     suffix = "index.html"
   }
+}
+
+resource "aws_s3_object" "objects" {
+  for_each = {
+    for x in fileset("${path.module}/hugo/public", "**") :
+    x => lookup(local.mime_map, reverse(split(".", x))[0])
+  }
+
+  bucket       = aws_s3_bucket.website.id
+  key          = each.key
+  content_type = each.value
+  source       = "${path.module}/hugo/public/${each.key}"
+  source_hash  = filemd5("${path.module}/hugo/public/${each.key}")
 }
 
 ###############
