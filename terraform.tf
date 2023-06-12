@@ -14,7 +14,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = "~> 5.2"
     }
   }
 }
@@ -190,27 +190,22 @@ resource "aws_route53_record" "records" {
 #   S3 BUCKET   #
 #################
 
-data "aws_iam_policy_document" "website" {
-  statement {
-    sid       = "AllowCloudFront"
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.website.arn}/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.website.iam_arn]
-    }
-  }
-}
-
 resource "aws_s3_bucket" "website" {
-  bucket        = "mancevice-dev-us-west-2-alexander"
-  force_destroy = false
+  bucket = "us-west-2-mancevice-dev-alexander"
 }
 
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
-  policy = data.aws_iam_policy_document.website.json
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = {
+      Sid       = "AllowCloudFront"
+      Effect    = "Allow"
+      Action    = "s3:GetObject"
+      Resource  = "${aws_s3_bucket.website.arn}/*"
+      Principal = { AWS = aws_cloudfront_origin_access_identity.website.iam_arn }
+    }
+  })
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
